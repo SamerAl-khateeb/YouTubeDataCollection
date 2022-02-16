@@ -75,7 +75,7 @@ def main():
 
         # make a request and get a response
         json_response = make_request(location,accessToken)
-        #print(json.dumps(json_response, indent=4, sort_keys=True))
+        print(json.dumps(json_response, indent=4, sort_keys=True))
         
         #numberOfRequestes = numberOfRequestes + 1
 
