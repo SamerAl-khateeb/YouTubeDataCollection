@@ -9,6 +9,11 @@
 #   python3 -m pip install google-auth-oauthlib
 #   python3 -m pip install --upgrade google-api-python-client
 
+# For Windows users, open CMD and type:
+#   py -m pip install --upgrade pip==19.0.3
+#   py -m pip install google-auth-oauthlib
+#   py -m pip install --upgrade google-api-python-client
+
 import os
 import google_auth_oauthlib.flow
 import googleapiclient.discovery
