@@ -3,6 +3,12 @@
 # which can be found here https://developers.google.com/youtube/v3/docs/videos/list?apix=true
 # Sample Python code for youtube.videos.list
 
+# To be able to run the code using IDLE you have to do the following:
+# For Mac users, open terminal and type:
+#   python3 -m pip install --upgrade pip==19.0.3
+#   python3 -m pip install google-auth-oauthlib
+#   python3 -m pip install --upgrade google-api-python-client
+
 import os, pickle
 import google_auth_oauthlib.flow
 import googleapiclient.discovery
@@ -17,7 +23,7 @@ scopes = ["https://www.googleapis.com/auth/youtube.readonly"]
 def make_request(location, accessToken):
     api_service_name = "youtube"
     api_version = "v3"
-    client_secrets_file = "YT_client_secret.json"
+    client_secrets_file = "YT_client_secret.json"     #need to rename your json file to this name
 
     # Get credentials and create an API client
     flow = google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file(client_secrets_file, scopes)
