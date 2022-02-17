@@ -24,21 +24,17 @@ import time
 
 scopes = ["https://www.googleapis.com/auth/youtube.readonly"]
 
-
 def make_request(location, accessToken):
     api_service_name = "youtube"
     api_version = "v3"
-    client_secrets_file = "YT_client_secret.json"     #need to rename your json file to this name
+    API_KEY = "PasteYourAPIKeyHere!"
 
-    # Get credentials and create an API client
-    flow = google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file(client_secrets_file, scopes)
-    credentials = flow.run_console()
-    youtube = googleapiclient.discovery.build(api_service_name, api_version, credentials=credentials)
+    youtube = googleapiclient.discovery.build(api_service_name, api_version, developerKey=API_KEY)
 
     request = youtube.videos().list(
         part="snippet,contentDetails,statistics",
         chart="mostPopular",
-        maxResults=200,
+        maxResults=10,
         regionCode=location,
         pageToken=accessToken
     )
@@ -56,7 +52,7 @@ def write_output_to_CSV(biglist):
         csvwriter.writerow(["channelId", "channelTitle", "channelDescription", 
                                 "videoCategoryId", "videoTitle", "videoDescription", 
                                 "videoPublishedAt", "videoTags", "videoCommentCount",
-                                "videoFavoriteCount", "videoLikeCount", "videoViewCount"])
+                                "videoFavoriteCount", "videoLikeCount", "videoViewCount", "videoPopularAt"])
         #writing/inserting the list to the output file 
         csvwriter.writerows(biglist)
     # close the output file
@@ -66,12 +62,14 @@ def write_output_to_CSV(biglist):
 def main():
     # creating a list to hold the output
     CSV_output_list =[]
-    
+
+    # counter to keep count of how many requests made
+    # so far so we do not exceed the 10,000 requests per day limit
     numberOfRequestes = 0
 
     # list of country codes can be used here, 
     # you can find these at https://countrycode.org
-    list_of_locations =["US"]
+    list_of_locations =["US", "CA"]
     
     # collect data for each locaiton in the list
     for location in list_of_locations:
@@ -82,12 +80,12 @@ def main():
         json_response = make_request(location,accessToken)
         print(json.dumps(json_response, indent=4, sort_keys=True))
         
-        #numberOfRequestes = numberOfRequestes + 1
+        numberOfRequestes = numberOfRequestes + 1
 
-        # keep extracting the vaalues from the response of the current page of result
+        # keep extracting the values from the response of the current page of result
         # if there is not more results exit and start the same process for the next location 
         while (True):
-            # extract the vaalues from the response of the current page of result
+            # extract the values from the response of the current page of result
             for record in range(len(json_response['items'])):
                 videoCategoryId = json_response['items'][record]['snippet']['categoryId']
                 
@@ -106,36 +104,54 @@ def main():
                 except KeyError as e:
                     videoTags ="none"
 
-                videoCommentCount = json_response['items'][record]["statistics"]['commentCount']
-                videoFavoriteCount = json_response['items'][record]["statistics"]['favoriteCount']
-                videoLikeCount = json_response['items'][record]["statistics"]['likeCount']
-                videoViewCount = json_response['items'][record]["statistics"]['viewCount']
+                # not all videos has comments count available
+                try:
+                    videoCommentCount = json_response['items'][record]["statistics"]['commentCount']
+                except KeyError as e:
+                    videoCommentCount = 0
+
+                try:
+                    videoFavoriteCount = json_response['items'][record]["statistics"]['favoriteCount']
+                except KeyError as e:
+                    videoFavoriteCount = 0
+
+                try:
+                    videoLikeCount = json_response['items'][record]["statistics"]['likeCount']
+                except KeyError as e:
+                    videoLikeCount = 0
+
+                try:
+                    videoViewCount = json_response['items'][record]["statistics"]['viewCount']
+                except KeyError as e:
+                    videoViewCount = 0
+
+                videoPopularAt = location
+
                 
                 # create one CSV row
                 CSV_output_row = [channelId, channelTitle, channelDescription, 
                                     videoCategoryId, videoTitle, videoDescription, 
                                     videoPublishedAt, videoTags, videoCommentCount,
-                                     videoFavoriteCount, videoLikeCount, videoViewCount]
+                                     videoFavoriteCount, videoLikeCount, videoViewCount, videoPopularAt]
                 
                 # append the row to the CSV list
                 CSV_output_list.append(CSV_output_row)
 
         
-            #if ('nextPageToken' in json_response):
-                #accessToken = json_response['nextPageToken']
-                #print(accessToken)
-                #json_response = make_request(location, accessToken)
-                #numberOfRequestes = numberOfRequestes + 1
-            #else:
-                #break
-            # sleep for 1 day (86400 seconds) once you reach  
-            # the 10000 requests per 1 day limit. 
-            #if (numberOfRequestes = 10000):
-                #time.sleep(86400)
+            if ('nextPageToken' in json_response):
+                accessToken = json_response['nextPageToken']
+                print(accessToken)
+                json_response = make_request(location, accessToken)
+                print(json.dumps(json_response, indent=4, sort_keys=True))
+                numberOfRequestes = numberOfRequestes + 1
+            else:
+                break
+            # sleep for 1 day (86,400 seconds) once you reach  
+            # the 10,000 requests per 1 day limit. 
+            if (numberOfRequestes == 10000):
+                time.sleep(86400)
                 #Then reset the number of requests
-                #numberOfRequestes = 0
-            break
-
+                numberOfRequestes = 0
         
         # send the list to the function to create a CSV file
         write_output_to_CSV(CSV_output_list)
