@@ -1,4 +1,4 @@
-# This script return a csv file with trending videos information in a specific Location
+# This script return a csv file with trending/popular videos information in a specific Location
 # It is a modified version of the sample code posted by YouTube Data API 
 # which can be found here https://developers.google.com/youtube/v3/docs/videos/list?apix=true
 # Sample Python code for youtube.videos.list
