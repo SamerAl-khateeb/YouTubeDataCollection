@@ -1,9 +1,10 @@
+# popular_vid_in_location.py
+# By: Samer Al-khateeb
+
 # This script return a csv file with trending/popular videos information in a specific Location
 # It is a modified version of the sample code posted by YouTube Data API 
 # which can be found here https://developers.google.com/youtube/v3/docs/videos/list?apix=true
 # Sample Python code for youtube.videos.list
-
-# By: Samer Al-khateeb
 
 # To be able to run the code using IDLE you have to do the following:
 # For Mac users, open terminal and type:
