@@ -8,12 +8,12 @@
 
 # To be able to run the code using IDLE you have to do the following:
 # For Mac users, open terminal and type:
-#   python3 -m pip install --upgrade pip==19.0.3
+#   python3 -m pip install --upgrade pip
 #   python3 -m pip install google-auth-oauthlib
 #   python3 -m pip install --upgrade google-api-python-client
 
 # For Windows users, open CMD and type:
-#   py -m pip install --upgrade pip==19.0.3
+#   py -m pip install --upgrade pip
 #   py -m pip install google-auth-oauthlib
 #   py -m pip install --upgrade google-api-python-client
 
