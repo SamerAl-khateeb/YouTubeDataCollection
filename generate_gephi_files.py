@@ -6,9 +6,6 @@
 # and produce two output files called "edges.csv" and "nodes.csv" 
 # these files can be imported directly to Gephi
 
-# Before running this script you need to remove 
-# the header/first row of the videoTitleByTagsNetwork.csv file 
-
 
 import os
 import csv
@@ -26,6 +23,9 @@ def read_CSV_file():
 
     #read the content of the file
     inputFileContents = csv.reader(inputFile)
+
+    # skipping the first row in the csv input file
+    next(inputFileContents)
 
     return inputFileContents
 

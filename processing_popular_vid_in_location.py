@@ -7,8 +7,6 @@
 # of videoTitle X Tags network file which can be analyzed and 
 # visualized using Gephi
 
-# Before running this script you need to remove 
-# the header/first row of the output.csv file 
 
 import os
 import csv
@@ -25,6 +23,9 @@ def read_CSV_file():
 
     #read the content of the file
     inputFileContents = csv.reader(inputFile)
+
+    # skipping the first row in the csv input file
+    next(inputFileContents)
 
     return inputFileContents
 
