@@ -27,6 +27,11 @@ import time
 
 scopes = ["https://www.googleapis.com/auth/youtube.readonly"]
 
+'''
+This function make a request using your Data API key to get 
+the most popular videos on YouTube in a specific location
+then retrurn the results in json (json_response)
+'''
 def make_request(location, accessToken):
     api_service_name = "youtube"
     api_version = "v3"
@@ -45,7 +50,9 @@ def make_request(location, accessToken):
     json_response = request.execute()
     return json_response
 
-
+'''
+This function write the output as a CSV file
+'''
 def write_output_to_CSV(biglist):
     # creating a file to save the output
     with open('output.csv', 'w', newline='', encoding='utf-8') as csv_output_file:
@@ -86,7 +93,7 @@ def main():
         numberOfRequestes = numberOfRequestes + 1
 
         # keep extracting the values from the response of the current page of result
-        # if there is not more results exit and start the same process for the next location 
+        # if there is no more results, exit and start the same process for the next location 
         while (True):
             # extract the values from the response of the current page of result
             for record in range(len(json_response['items'])):
@@ -140,7 +147,7 @@ def main():
                 # append the row to the CSV list
                 CSV_output_list.append(CSV_output_row)
 
-        
+            # if there are more pages of result, make more requests
             if ('nextPageToken' in json_response):
                 accessToken = json_response['nextPageToken']
                 print(accessToken)
@@ -150,7 +157,7 @@ def main():
             else:
                 break
             # sleep for 1 day (86,400 seconds) once you reach  
-            # the 10,000 requests per 1 day limit. 
+            # the 10,000 requests per 1 day limit from YouTube. 
             if (numberOfRequestes == 10000):
                 time.sleep(86400)
                 #Then reset the number of requests

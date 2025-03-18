@@ -11,6 +11,9 @@
 import os
 import csv
 
+'''
+This function will read a CSV file 
+'''
 def read_CSV_file():
     # the output file name generated 
     # by popular_vid_in_location.py 
@@ -29,7 +32,7 @@ def read_CSV_file():
 
     return inputFileContents
 
-
+# This function will write the output into a CSV file
 def write_output_to_CSV(biglist):
     # creating a file to save the output
     with open('videoTitleByTagsNetwork.csv', 'w', newline='', encoding='utf-8') as csv_output_file:
@@ -44,6 +47,7 @@ def write_output_to_CSV(biglist):
         csvwriter.writerows(biglist)
     # close the output file
     csv_output_file.close()
+
 
 def main():
     #define an output list
