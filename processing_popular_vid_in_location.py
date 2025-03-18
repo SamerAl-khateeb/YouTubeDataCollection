@@ -20,9 +20,9 @@ def read_CSV_file():
     filename = "output.csv"
 
     #open the file 
-    inputFile = open(filename, "r")
+    #inputFile = open(filename, "r")
     # if you get an unicodeError try the line below instead
-    #inputFile = open(filename, "r", encoding='utf-8')
+    inputFile = open(filename, "r", encoding='utf-8')
 
     #read the content of the file
     inputFileContents = csv.reader(inputFile)
